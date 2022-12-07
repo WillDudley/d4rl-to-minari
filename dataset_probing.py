@@ -1,3 +1,7 @@
+"""
+The purpose of this script is to investigate datasets at a high level
+"""
+
 import minari
 import gym
 import d4rl.gym_mujoco
