@@ -37,25 +37,32 @@ envs=[
     "walker2d-medium-replay-v2",
     ]
 
+env_map = {
+    "half": "HalfCheetah-v3",
+    "hopp": "Hopper-v3",
+    "walk": "Walker2d-v3"
+}
+
 for env in envs:
     dataset_name = f"D4RL-{env[:-3]}_{env[-2:]}_Legacy-D4RL-dataset"
 
     # retrieve d4rl dataset from berkley servers
-    env = d4rl.qlearning_dataset(gym.make(env))
+    env_ds = d4rl.qlearning_dataset(gym.make(env))
 
     # convert d4rl dataset to minari dataset
     dataset = MinariDataset(
         dataset_name=dataset_name,
         algorithm_name="SAC (check code permalink for details)",
+        environment_name=env_map[env[:4]],
         seed_used=np.nan,
         code_permalink="https://github.com/Farama-Foundation/D4RL/wiki/Dataset-Reproducibility-Guide",
         author="Justin Fu",
         author_email="justinjfu@eecs.berkeley.edu",
-        observations=np.vstack((env["observations"], env["next_observations"][-1])),  # env["observations"],
-        actions=np.vstack((env["actions"], [0]*len(env["actions"][0]))),  # env["actions"],
-        rewards=np.append(env["rewards"], 0),  # env["rewards"],
-        terminations=np.append(env["terminals"], 1),  # env["terminals"],  assume last transition is terminal
-        truncations=np.append(env["terminals"], 1)  # env["terminals"],
+        observations=np.vstack((env_ds["observations"], env_ds["next_observations"][-1])),  # env["observations"],
+        actions=np.vstack((env_ds["actions"], [0]*len(env_ds["actions"][0]))),  # env["actions"],
+        rewards=np.append(env_ds["rewards"], 0),  # env["rewards"],
+        terminations=np.append(env_ds["terminals"], 1),  # env["terminals"],  assume last transition is terminal
+        truncations=np.append(env_ds["terminals"], 1)  # env["terminals"],
     )
 
     # assert (dataset.observations[:-1] == env['observations']).all()
