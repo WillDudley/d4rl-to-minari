@@ -54,6 +54,7 @@ for env in envs:
         dataset_name=dataset_name,
         algorithm_name="SAC (check code permalink for details)",
         environment_name=env_map[env[:4]],
+        environment_stack="Not supported (gymnasium < 0.27)",
         seed_used=np.nan,
         code_permalink="https://github.com/Farama-Foundation/D4RL/wiki/Dataset-Reproducibility-Guide",
         author="Justin Fu",
